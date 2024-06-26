@@ -1,0 +1,18 @@
+<DOCTYPE html>
+    <html>
+        <script>
+            $(document).ready(function() {
+              for (let i = 0; i < 16; i++) {
+                let box = $("<div class='box'></div>");
+                $("#container").append(box);
+              }
+              $(".box").click(function() {
+                if ($(this).css("background-color") == "rgb(255, 255, 255)") {
+                  $(this).css("background-color", "grey");
+                } else {
+                  $(this).css("background-color", "white");
+                }
+              });
+            });
+          </script>
+    </html>
