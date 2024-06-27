@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Section</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: auto;
+        }
+        .fixed-top, .fixed-bottom {
+            position: fixed;
+            left: 0;
+            right: 0;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            z-index: 1000;
+        }
+        .fixed-top {
+            top: 0;
+        }
+        .fixed-bottom {
+            bottom: 0;
+            border-top: 1px solid #ddd;
+        }
+        .content {
+            padding: 50px 20px 60px; /* Adjusted padding to account for fixed elements */
+            margin-top: 80px; /* Adjusted margin for top element */
+        }
+        .comment {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+        }
+        .comment-actions {
+            margin-left: auto;
+        }
+        .comment-actions button {
+            margin-left: 5px;
+        }
+        .comment-body {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed-top">
+        <h2>Original Post</h2>
+        <p>Trying to decide a career path? Programming is the move. Change my mind.</p>
+    </div>
+    
+    <div class="container">
+        <div class="content" id="comments">
+            <!-- Comments will be added here dynamically -->
+        </div>
+    </div>
+    
+    <div class="fixed-bottom">
+        <input type="text" id="displayName" placeholder="Your display name">
+        <input type="text" id="commentText" placeholder="Your comment">
+        <button id="postComment">Post Comment</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let comments = [];
+            
+            function renderComments() {
+                $('#comments').empty();
+                comments.forEach(function(comment, index) {
+                    $('#comments').prepend(`
+                        <div class="comment" data-index="${index}">
+                            <div class="comment-header">
+                                <strong>${comment.displayName}</strong>
+                                <div class="comment-actions">
+                                    <button class="editComment">Edit</button>
+                                    <button class="deleteComment">Delete</button>
+                                </div>
+                            </div>
+                            <div class="comment-body">${comment.text}</div>
+                        </div>
+                    `);
+                });
+            }
+
+            $('#postComment').click(function() {
+                let displayName = $('#displayName').val().trim();
+                let commentText = $('#commentText').val().trim();
+
+                if (displayName && commentText) {
+                    comments.push({ displayName: displayName, text: commentText });
+                    $('#displayName').val('');
+                    $('#commentText').val('');
+                    renderComments();
+                }
+            });
+
+            $(document).on('click', '.deleteComment', function() {
+                let index = $(this).closest('.comment').data('index');
+                comments.splice(index, 1);
+                renderComments();
+            });
+
+            $(document).on('click', '.editComment', function() {
+                let index = $(this).closest('.comment').data('index');
+                let newText = prompt('Edit your comment:', comments[index].text);
+                if (newText !== null) {
+                    comments[index].text = newText;
+                    renderComments();
+                }
+            });
+
+            // Initial render
+            renderComments();
+        });
+    </script>
+</body>
+</html>
